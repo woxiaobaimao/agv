@@ -61,6 +61,9 @@ export class MapRenderer {
     this.ctx.strokeStyle = '#95a5a6'
     this.ctx.lineWidth = 1.5
 
+    // 获取原点位置（用于controlPoints转换）
+    const origin = worldToCanvas(0, 0)
+
     for (const path of paths) {
       const srcPoint = pointMap.get(path.srcPointName)
       const destPoint = pointMap.get(path.destPointName)
@@ -70,30 +73,50 @@ export class MapRenderer {
       const start = worldToCanvas(srcPoint.position.x, srcPoint.position.y)
       const end = worldToCanvas(destPoint.position.x, destPoint.position.y)
 
-      // 绘制路径线
+      const connectionType = (path as any).layout?.connectionType || 'DIRECT'
+      
       this.ctx.beginPath()
       this.ctx.moveTo(start.canvasX, start.canvasY)
-      this.ctx.lineTo(end.canvasX, end.canvasY)
+
+      if (connectionType === 'BEZIER') {
+        const controlPoints = (path as any).layout?.controlPoints || []
+        
+        if (controlPoints.length >= 2) {
+          // controlPoints 已经是相对于原点的像素坐标
+          const cp1X = origin.canvasX + controlPoints[0].x
+          const cp1Y = origin.canvasY - controlPoints[0].y  // Y轴取反
+          
+          const cp2X = origin.canvasX + controlPoints[1].x
+          const cp2Y = origin.canvasY - controlPoints[1].y  // Y轴取反
+          
+          this.ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, end.canvasX, end.canvasY)
+        } else {
+          this.ctx.lineTo(end.canvasX, end.canvasY)
+        }
+      } else {
+        this.ctx.lineTo(end.canvasX, end.canvasY)
+      }
+
       this.ctx.stroke()
 
       // 绘制方向箭头
-      const angle = Math.atan2(end.canvasY - start.canvasY, end.canvasX - start.canvasX)
+      const dx = end.canvasX - start.canvasX
+      const dy = end.canvasY - start.canvasY
+      const angle = Math.atan2(dy, dx)
       const arrowSize = 8
-      const arrowPos = {
-        x: end.canvasX - arrowSize * 1.5 * Math.cos(angle),
-        y: end.canvasY - arrowSize * 1.5 * Math.sin(angle)
-      }
+      const arrowX = end.canvasX - arrowSize * 1.5 * Math.cos(angle)
+      const arrowY = end.canvasY - arrowSize * 1.5 * Math.sin(angle)
 
       this.ctx.fillStyle = '#95a5a6'
       this.ctx.beginPath()
       this.ctx.moveTo(
-        arrowPos.x - arrowSize * Math.cos(angle - Math.PI / 6),
-        arrowPos.y - arrowSize * Math.sin(angle - Math.PI / 6)
+        arrowX - arrowSize * Math.cos(angle - Math.PI / 6),
+        arrowY - arrowSize * Math.sin(angle - Math.PI / 6)
       )
-      this.ctx.lineTo(arrowPos.x + arrowSize * Math.cos(angle), arrowPos.y + arrowSize * Math.sin(angle))
+      this.ctx.lineTo(arrowX + arrowSize * Math.cos(angle), arrowY + arrowSize * Math.sin(angle))
       this.ctx.lineTo(
-        arrowPos.x - arrowSize * Math.cos(angle + Math.PI / 6),
-        arrowPos.y - arrowSize * Math.sin(angle + Math.PI / 6)
+        arrowX - arrowSize * Math.cos(angle + Math.PI / 6),
+        arrowY - arrowSize * Math.sin(angle + Math.PI / 6)
       )
       this.ctx.closePath()
       this.ctx.fill()
