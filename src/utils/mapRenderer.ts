@@ -24,24 +24,32 @@ export class MapRenderer {
   }
 
   drawPoints(points: Point[], worldToCanvas: (x: number, y: number) => { canvasX: number; canvasY: number }) {
-    this.ctx.fillStyle = '#3498db'
-    this.ctx.strokeStyle = '#2c3e50'
-    this.ctx.lineWidth = 2
-
     for (const point of points) {
       const { canvasX, canvasY } = worldToCanvas(point.position.x, point.position.y)
+
+      // 根据类型选择颜色
+      let fillColor = '#3498db'
+      if (point.type === 'PARK_POSITION') {
+        fillColor = '#2ecc71'
+      } else if (point.type === 'HALT_POSITION') {
+        fillColor = '#3498db'
+      }
+
+      this.ctx.fillStyle = fillColor
+      this.ctx.strokeStyle = '#2c3e50'
+      this.ctx.lineWidth = 2
 
       this.ctx.beginPath()
       this.ctx.arc(canvasX, canvasY, POINT_RADIUS, 0, Math.PI * 2)
       this.ctx.fill()
       this.ctx.stroke()
 
+      // 绘制点的标签
       this.ctx.fillStyle = '#2c3e50'
-      this.ctx.font = '11px sans-serif'
+      this.ctx.font = '10px Arial'
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'top'
-      this.ctx.fillText(point.name, canvasX, canvasY + POINT_RADIUS + 3)
-      this.ctx.fillStyle = '#3498db'
+      this.ctx.fillText(point.name, canvasX, canvasY + POINT_RADIUS + 4)
     }
   }
 
@@ -50,8 +58,8 @@ export class MapRenderer {
     pointMap: Map<string, Point>,
     worldToCanvas: (x: number, y: number) => { canvasX: number; canvasY: number }
   ) {
-    this.ctx.strokeStyle = '#bdc3c7'
-    this.ctx.lineWidth = 2
+    this.ctx.strokeStyle = '#95a5a6'
+    this.ctx.lineWidth = 1.5
 
     for (const path of paths) {
       const srcPoint = pointMap.get(path.srcPointName)
@@ -62,24 +70,34 @@ export class MapRenderer {
       const start = worldToCanvas(srcPoint.position.x, srcPoint.position.y)
       const end = worldToCanvas(destPoint.position.x, destPoint.position.y)
 
+      // 绘制路径线
       this.ctx.beginPath()
       this.ctx.moveTo(start.canvasX, start.canvasY)
       this.ctx.lineTo(end.canvasX, end.canvasY)
       this.ctx.stroke()
 
-      this.drawArrow(start.canvasX, start.canvasY, end.canvasX, end.canvasY)
+      // 绘制方向箭头
+      const angle = Math.atan2(end.canvasY - start.canvasY, end.canvasX - start.canvasX)
+      const arrowSize = 8
+      const arrowPos = {
+        x: end.canvasX - arrowSize * 1.5 * Math.cos(angle),
+        y: end.canvasY - arrowSize * 1.5 * Math.sin(angle)
+      }
+
+      this.ctx.fillStyle = '#95a5a6'
+      this.ctx.beginPath()
+      this.ctx.moveTo(
+        arrowPos.x - arrowSize * Math.cos(angle - Math.PI / 6),
+        arrowPos.y - arrowSize * Math.sin(angle - Math.PI / 6)
+      )
+      this.ctx.lineTo(arrowPos.x + arrowSize * Math.cos(angle), arrowPos.y + arrowSize * Math.sin(angle))
+      this.ctx.lineTo(
+        arrowPos.x - arrowSize * Math.cos(angle + Math.PI / 6),
+        arrowPos.y - arrowSize * Math.sin(angle + Math.PI / 6)
+      )
+      this.ctx.closePath()
+      this.ctx.fill()
     }
-  }
-
-  private drawArrow(fromX: number, fromY: number, toX: number, toY: number) {
-    const headlen = 10
-    const angle = Math.atan2(toY - fromY, toX - fromX)
-
-    this.ctx.beginPath()
-    this.ctx.moveTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6))
-    this.ctx.lineTo(toX, toY)
-    this.ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6))
-    this.ctx.stroke()
   }
 
   drawVehicles(
@@ -93,18 +111,28 @@ export class MapRenderer {
       if (!point) continue
 
       const { canvasX, canvasY } = worldToCanvas(point.position.x, point.position.y)
+      const color = getVehicleColor(vehicle)
 
-      this.ctx.fillStyle = getVehicleColor(vehicle)
-      this.ctx.strokeStyle = '#2c3e50'
+      // 绘制外圈光晕
+      this.ctx.fillStyle = color
+      this.ctx.globalAlpha = 0.2
+      this.ctx.beginPath()
+      this.ctx.arc(canvasX, canvasY, VEHICLE_SIZE + 5, 0, Math.PI * 2)
+      this.ctx.fill()
+      this.ctx.globalAlpha = 1.0
+
+      // 绘制主圆圈
+      this.ctx.fillStyle = color
+      this.ctx.strokeStyle = '#fff'
       this.ctx.lineWidth = 2
-
       this.ctx.beginPath()
       this.ctx.arc(canvasX, canvasY, VEHICLE_SIZE, 0, Math.PI * 2)
       this.ctx.fill()
       this.ctx.stroke()
 
+      // 绘制车辆标签
       this.ctx.fillStyle = '#fff'
-      this.ctx.font = 'bold 10px sans-serif'
+      this.ctx.font = 'bold 9px Arial'
       this.ctx.textAlign = 'center'
       this.ctx.textBaseline = 'middle'
       const label = vehicle.name.replace('Vehicle-', 'V')

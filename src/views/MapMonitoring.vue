@@ -108,12 +108,12 @@ const drawVehicles = () => {
 
 const getVehicleColor = (vehicle: Vehicle): string => {
   const colors: { [key: string]: string } = {
-    'Vehicle-01-VDA5050-2.0': '#00ff88',
-    'Vehicle-02': '#00ddff',
-    'Vehicle-03': '#ffaa00',
-    'Vehicle-04': '#ff5555'
+    'Vehicle-01-VDA5050-2.0': '#e74c3c',
+    'Vehicle-02': '#2ecc71',
+    'Vehicle-03': '#3498db',
+    'Vehicle-04': '#f39c12'
   }
-  return colors[vehicle.name] || '#00ff88'
+  return colors[vehicle.name] || '#95a5a6'
 }
 
 const draw = () => {
