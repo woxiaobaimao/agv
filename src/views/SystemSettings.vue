@@ -147,10 +147,12 @@
                 <el-switch v-model="row.enabled" />
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column label="操作" width="120">
               <template #default>
-                <el-button type="primary" size="small" text>编辑</el-button>
-                <el-button type="danger" size="small" text>删除</el-button>
+                <el-space :size="6">
+                  <el-button type="primary" size="small" text>编辑</el-button>
+                  <el-button type="danger" size="small" text>删除</el-button>
+                </el-space>
               </template>
             </el-table-column>
           </el-table>
@@ -209,10 +211,12 @@
             <el-table-column prop="name" label="备份名称" />
             <el-table-column prop="time" label="创建时间" />
             <el-table-column prop="size" label="大小" width="80" />
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="120">
               <template #default>
-                <el-button type="primary" size="small" text>恢复</el-button>
-                <el-button type="danger" size="small" text>删除</el-button>
+                <el-space :size="6">
+                  <el-button type="primary" size="small" text>恢复</el-button>
+                  <el-button type="danger" size="small" text>删除</el-button>
+                </el-space>
               </template>
             </el-table-column>
           </el-table>
