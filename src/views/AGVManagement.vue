@@ -33,19 +33,19 @@
 
       <!-- AGV 列表 -->
       <el-table :data="filteredAGVs" style="width: 100%" stripe>
-        <el-table-column prop="id" label="AGV ID" width="160" />
-        <el-table-column label="状态" width="100">
+        <el-table-column prop="id" label="AGV ID" min-width="180" />
+        <el-table-column label="状态" width="90">
           <template #default="{ row }">
             <el-tag :type="getStatusColor(row.status)">{{ row.status }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="battery" label="电池电量" width="120">
+        <el-table-column prop="battery" label="电池电量" width="110">
           <template #default="{ row }">
             <el-progress :percentage="row.battery" size="small" />
           </template>
         </el-table-column>
-        <el-table-column prop="location" label="当前位置" width="120" />
-        <el-table-column prop="currentTask" label="当前任务" width="100" />
+        <el-table-column prop="location" label="当前位置" min-width="100" />
+        <el-table-column prop="currentTask" label="当前任务" width="90" />
         <el-table-column prop="speed" label="速度(m/s)" width="100" />
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
