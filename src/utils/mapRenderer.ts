@@ -201,7 +201,8 @@ export function createWorldToCanvasTransform(
 
   return (x: number, y: number) => {
     const canvasX = canvasWidth / 2 + (x - centerX) * scale
-    const canvasY = canvasHeight / 2 + (y - centerY) * scale
+    // Y轴翻转：openTCS中Y轴向下为正，但我们需要向上为正
+    const canvasY = canvasHeight / 2 - (y - centerY) * scale
     return { canvasX, canvasY }
   }
 }

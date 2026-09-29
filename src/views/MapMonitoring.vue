@@ -119,7 +119,7 @@ const getVehicleColor = (vehicle: Vehicle): string => {
 const draw = () => {
   if (!ctx.value || !canvasRef.value) return
   const renderer = new MapRenderer(ctx.value, canvasWidth.value, canvasHeight.value)
-  renderer.clear('#0a1828')
+  renderer.clear('#f5f5f5')
   drawPaths()
   drawPoints()
   drawVehicles()
