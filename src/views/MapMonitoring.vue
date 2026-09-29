@@ -99,6 +99,21 @@ const drawPaths = () => {
   renderer.drawPaths(plantModel.value.paths, pointMap, worldToCanvas.value)
 }
 
+const getVehicleColor = (vehicle: Vehicle): string => {
+  switch (vehicle.state) {
+    case 'MOVING':
+      return '#00ff88'
+    case 'IDLE':
+      return '#00ddff'
+    case 'CHARGING':
+      return '#ffaa00'
+    case 'ERROR':
+      return '#ff4444'
+    default:
+      return '#999999'
+  }
+}
+
 const drawVehicles = () => {
   if (!ctx.value || !plantModel.value) return
   const renderer = new MapRenderer(ctx.value, canvasWidth.value, canvasHeight.value)
@@ -132,32 +147,7 @@ const draw = () => {
   drawPoints()
   drawVehicles()
   
-  // 在右下角显示鼠标相对原点的像素坐标
-  ctx.value.fillStyle = '#000'
-  ctx.value.font = 'bold 14px Arial'
-  ctx.value.textAlign = 'right'
-  ctx.value.textBaseline = 'bottom'
-  ctx.value.fillText(
-    `Pixel: (${mousePos.value.x}, ${mousePos.value.y})`,
-    canvasWidth.value - 20,
-    canvasHeight.value - 20
-  )
-  
-  // 调试：显示controlPoints数据
-  if (plantModel.value) {
-    const path = plantModel.value.paths.find(p => 
-      p.srcPointName === 'Point-0001' && p.destPointName === 'Point-0002'
-    )
-    if (path && (path as any).layout?.controlPoints) {
-      const cp = (path as any).layout.controlPoints
-      ctx.value.fillStyle = '#f00'
-      ctx.value.font = '12px Arial'
-      ctx.value.textAlign = 'left'
-      ctx.value.textBaseline = 'top'
-      ctx.value.fillText(`CP1 raw: x=${cp[0].x}, y=${cp[0].y}`, 20, 20)
-      ctx.value.fillText(`CP2 raw: x=${cp[1].x}, y=${cp[1].y}`, 20, 40)
-    }
-  }
+
 }
 
 const render = () => {
@@ -316,10 +306,13 @@ onBeforeUnmount(() => {
     <!-- 底部信息栏 -->
     <div class="bottom-bar">
       <div class="bottom-info">
+        <span>已连接: {{ vehicles.length }} 台车辆</span>
+        <span class="separator">|</span>
+        <span>鼠标坐标: ({{ mousePos.x }}, {{ mousePos.y }})</span>
+        <span class="separator">|</span>
         <span>实时更新频率: 1s</span>
         <span class="separator">|</span>
         <span>分辨率: {{ canvasWidth }} x {{ canvasHeight }}</span>
-        <span class="separator">|</span>
         <span>已连接: {{ vehicles.length }} 台车辆</span>
       </div>
     </div>
