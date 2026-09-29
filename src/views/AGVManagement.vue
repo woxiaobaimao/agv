@@ -97,7 +97,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import request from '@/api/request'
+import api from '@/api'
 
 const searchText = ref('')
 const filterStatus = ref('')
@@ -125,10 +125,10 @@ const mapVehicleToAGV = (vehicle: any) => {
 
 const loadAGVData = async () => {
   try {
-    const data = await request.get('/v1/vehicles')
+    const data = await api.get('/v1/vehicles')
     agvList.value = data.map(mapVehicleToAGV)
   } catch (error) {
-    console.error('Failed to load AGV data:', error)
+    // 错误已由 api.handleError 统一处理并显示提示
     // 使用默认数据
     agvList.value = [
       { id: 'Vehicle-01-VDA5050-2.0', status: '空闲', battery: 100, location: '停靠区', currentTask: '-', speed: 0 },
