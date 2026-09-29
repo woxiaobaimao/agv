@@ -4,13 +4,43 @@ import type { RouteRecordRaw } from 'vue-router'
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue')
+    redirect: '/dashboard'
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: () => import('../views/Dashboard.vue'),
+    meta: { title: '仪表板' }
+  },
+  {
+    path: '/agv-management',
+    name: 'AGVManagement',
+    component: () => import('../views/AGVManagement.vue'),
+    meta: { title: 'AGV管理' }
+  },
+  {
+    path: '/task-scheduling',
+    name: 'TaskScheduling',
+    component: () => import('../views/TaskScheduling.vue'),
+    meta: { title: '任务调度' }
+  },
+  {
+    path: '/system-monitoring',
+    name: 'SystemMonitoring',
+    component: () => import('../views/SystemMonitoring.vue'),
+    meta: { title: '系统监控' }
+  },
+  {
+    path: '/system-settings',
+    name: 'SystemSettings',
+    component: () => import('../views/SystemSettings.vue'),
+    meta: { title: '系统设置' }
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import('../views/About.vue')
+    component: () => import('../views/About.vue'),
+    meta: { title: '关于' }
   }
 ]
 

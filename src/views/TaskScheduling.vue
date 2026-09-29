@@ -106,7 +106,7 @@
             <el-table-column label="优先级" width="90">
               <template #default="{ row }">
                 <el-rate
-                  v-model="getPriorityValue(row.priority)"
+                  :model-value="getPriorityValue(row.priority)"
                   :max="3"
                   disabled
                   size="small"
