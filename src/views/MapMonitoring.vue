@@ -156,18 +156,21 @@ const drawOrigin = () => {
 }
 
 const handleCanvasMouseMove = (event: MouseEvent) => {
-  if (!canvasRef.value) return
+  if (!canvasRef.value || !plantModel.value) return
   
   const rect = canvasRef.value.getBoundingClientRect()
   const canvasX = event.clientX - rect.left
   const canvasY = event.clientY - rect.top
   
-  // 计算相对于原点的像素坐标
-  const origin = worldToCanvas.value(0, 0)
-  const relX = Math.round(canvasX - origin.canvasX)
-  const relY = Math.round(origin.canvasY - canvasY)  // Y轴取反
+  // 转换为世界坐标（毫米）
+  const { minX, minY, maxX, maxY } = mapBounds.value
+  const scaleX = (maxX - minX) / canvasWidth.value
+  const scaleY = (maxY - minY) / canvasHeight.value
   
-  mousePos.value = { x: relX, y: relY }
+  const worldX = Math.round(minX + canvasX * scaleX)
+  const worldY = Math.round(maxY - canvasY * scaleY)
+  
+  mousePos.value = { x: worldX, y: worldY }
 }
 
 const draw = () => {
@@ -339,7 +342,7 @@ onBeforeUnmount(() => {
       <div class="bottom-info">
         <span>已连接: {{ vehicles.length }} 台车辆</span>
         <span class="separator">|</span>
-        <span>鼠标坐标: ({{ mousePos.x }}, {{ mousePos.y }})</span>
+        <span>鼠标坐标: ({{ mousePos.x }}mm, {{ mousePos.y }}mm)</span>
         <span class="separator">|</span>
         <span>实时更新频率: 1s</span>
         <span class="separator">|</span>
