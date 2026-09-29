@@ -78,10 +78,7 @@ const toggleCollapse = () => {
         <router-view />
       </el-main>
 
-      <!-- 底部栏 -->
-      <el-footer class="app-footer">
-        <p>&copy; 2026 OpenTCS AGV 调度系统 v1.0.0 | 技术支持: admin@example.com</p>
-      </el-footer>
+
     </el-container>
   </el-container>
 </template>
@@ -157,19 +154,6 @@ const toggleCollapse = () => {
   background-color: #f5f7fa;
   overflow-y: auto;
   padding: 0;
-}
-
-.app-footer {
-  background-color: #2c3e50;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  border-top: 1px solid #ecf0f1;
-  font-size: 12px;
-}
-
-.app-footer p {
-  margin: 0;
 }
 
 /* 菜单样式自定义 */
