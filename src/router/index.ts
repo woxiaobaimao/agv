@@ -13,6 +13,12 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '仪表板' }
   },
   {
+    path: '/map-monitoring',
+    name: 'MapMonitoring',
+    component: () => import('../views/MapMonitoring.vue'),
+    meta: { title: '实时地图' }
+  },
+  {
     path: '/agv-management',
     name: 'AGVManagement',
     component: () => import('../views/AGVManagement.vue'),

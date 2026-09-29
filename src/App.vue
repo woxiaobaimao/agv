@@ -8,6 +8,7 @@ const isCollapsed = ref(false)
 
 const menuItems = [
   { path: '/dashboard', label: '📊 仪表板', icon: 'dashboard' },
+  { path: '/map-monitoring', label: '🗺️ 实时地图', icon: 'map' },
   { path: '/agv-management', label: '🚛 AGV管理', icon: 'agv' },
   { path: '/task-scheduling', label: '📋 任务调度', icon: 'task' },
   { path: '/system-monitoring', label: '📈 系统监控', icon: 'monitor' },

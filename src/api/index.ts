@@ -1,20 +1,14 @@
 import request from './request'
 import { ElMessage } from 'element-plus'
 
-interface ApiResponse<T = any> {
-  data: T
-  code?: number
-  message?: string
-}
-
 class ApiClient {
   /**
    * GET 请求
    */
   async get<T = any>(url: string, config?: any): Promise<T> {
     try {
-      const response = await request.get<ApiResponse<T>>(url, config)
-      return response.data
+      const response = await request.get<any>(url, config)
+      return response as T
     } catch (error: any) {
       this.handleError(error)
       throw error
@@ -26,8 +20,8 @@ class ApiClient {
    */
   async post<T = any>(url: string, data?: any, config?: any): Promise<T> {
     try {
-      const response = await request.post<ApiResponse<T>>(url, data, config)
-      return response.data
+      const response = await request.post<any>(url, data, config)
+      return response as T
     } catch (error: any) {
       this.handleError(error)
       throw error
@@ -39,8 +33,8 @@ class ApiClient {
    */
   async put<T = any>(url: string, data?: any, config?: any): Promise<T> {
     try {
-      const response = await request.put<ApiResponse<T>>(url, data, config)
-      return response.data
+      const response = await request.put<any>(url, data, config)
+      return response as T
     } catch (error: any) {
       this.handleError(error)
       throw error
@@ -52,8 +46,8 @@ class ApiClient {
    */
   async delete<T = any>(url: string, config?: any): Promise<T> {
     try {
-      const response = await request.delete<ApiResponse<T>>(url, config)
-      return response.data
+      const response = await request.delete<any>(url, config)
+      return response as T
     } catch (error: any) {
       this.handleError(error)
       throw error
