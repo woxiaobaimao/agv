@@ -56,10 +56,19 @@ const vehicleStats = computed(() => {
 const fetchPlantModel = async () => {
   try {
     loading.value = true
+    console.log('正在从 /v1/plantModel 加载地图数据...')
     const data = await apiClient.get<PlantModel>('/v1/plantModel')
+    console.log('地图数据加载成功:', data)
     plantModel.value = data
+    if (data?.points?.length) {
+      console.log(`地图包含 ${data.points.length} 个点，${data.paths?.length || 0} 条路径`)
+    }
   } catch (err: any) {
-    console.error(err)
+    console.error('加载地图失败:', err.message || err)
+    if (err.response) {
+      console.error('API响应状态:', err.response.status)
+      console.error('API响应数据:', err.response.data)
+    }
   } finally {
     loading.value = false
   }
@@ -68,9 +77,12 @@ const fetchPlantModel = async () => {
 const fetchVehicles = async () => {
   try {
     const data = await apiClient.get<Vehicle[]>('/v1/vehicles')
-    vehicles.value = data
-  } catch (err) {
-    console.error('Failed to fetch vehicles:', err)
+    if (data && Array.isArray(data)) {
+      vehicles.value = data
+      console.log(`已加载 ${data.length} 台车辆数据`)
+    }
+  } catch (err: any) {
+    console.error('加载车辆数据失败:', err.message || err)
   }
 }
 
@@ -128,18 +140,35 @@ const resizeCanvas = () => {
 }
 
 onMounted(async () => {
-  if (!canvasRef.value) return
+  console.log('MapMonitoring 组件已挂载')
+  
+  if (!canvasRef.value) {
+    console.error('Canvas 元素未找到')
+    return
+  }
+  
   resizeCanvas()
   ctx.value = canvasRef.value.getContext('2d')
+  
+  if (!ctx.value) {
+    console.error('无法获取 Canvas 2D 上下文')
+    return
+  }
+  
+  console.log('Canvas 已初始化，分辨率:', canvasRef.value.width, 'x', canvasRef.value.height)
+  
   window.addEventListener('resize', resizeCanvas)
 
+  // 加载地图和车辆数据
   await fetchPlantModel()
   await fetchVehicles()
 
+  // 定期更新车辆位置
   updateInterval = setInterval(() => {
     fetchVehicles()
   }, 1000)
 
+  console.log('开始渲染地图...')
   render()
 })
 
