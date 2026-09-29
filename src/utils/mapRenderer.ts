@@ -83,11 +83,12 @@ export class MapRenderer {
         
         if (controlPoints.length >= 2) {
           // controlPoints 已经是相对于原点的像素坐标
+          // Y值为负表示向上，为正表示向下
           const cp1X = origin.canvasX + controlPoints[0].x
-          const cp1Y = origin.canvasY - controlPoints[0].y  // Y轴取反
+          const cp1Y = origin.canvasY + controlPoints[0].y  // 直接加（Y值已经正确）
           
           const cp2X = origin.canvasX + controlPoints[1].x
-          const cp2Y = origin.canvasY - controlPoints[1].y  // Y轴取反
+          const cp2Y = origin.canvasY + controlPoints[1].y  // 直接加（Y值已经正确）
           
           this.ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, end.canvasX, end.canvasY)
         } else {

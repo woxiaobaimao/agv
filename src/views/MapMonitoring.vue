@@ -142,6 +142,22 @@ const draw = () => {
     canvasWidth.value - 20,
     canvasHeight.value - 20
   )
+  
+  // 调试：显示controlPoints数据
+  if (plantModel.value) {
+    const path = plantModel.value.paths.find(p => 
+      p.srcPointName === 'Point-0001' && p.destPointName === 'Point-0002'
+    )
+    if (path && (path as any).layout?.controlPoints) {
+      const cp = (path as any).layout.controlPoints
+      ctx.value.fillStyle = '#f00'
+      ctx.value.font = '12px Arial'
+      ctx.value.textAlign = 'left'
+      ctx.value.textBaseline = 'top'
+      ctx.value.fillText(`CP1 raw: x=${cp[0].x}, y=${cp[0].y}`, 20, 20)
+      ctx.value.fillText(`CP2 raw: x=${cp[1].x}, y=${cp[1].y}`, 20, 40)
+    }
+  }
 }
 
 const render = () => {
