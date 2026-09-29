@@ -123,6 +123,38 @@ const drawVehicles = () => {
 
 const mousePos = ref({ x: 0, y: 0 })
 
+const drawOrigin = () => {
+  if (!ctx.value) return
+  
+  const origin = worldToCanvas.value(0, 0)
+  
+  ctx.value.save()
+  
+  // 绘制十字线
+  ctx.value.strokeStyle = '#ff0000'
+  ctx.value.lineWidth = 2
+  ctx.value.beginPath()
+  ctx.value.moveTo(origin.canvasX - 15, origin.canvasY)
+  ctx.value.lineTo(origin.canvasX + 15, origin.canvasY)
+  ctx.value.moveTo(origin.canvasX, origin.canvasY - 15)
+  ctx.value.lineTo(origin.canvasX, origin.canvasY + 15)
+  ctx.value.stroke()
+  
+  // 绘制圆圈
+  ctx.value.beginPath()
+  ctx.value.arc(origin.canvasX, origin.canvasY, 8, 0, Math.PI * 2)
+  ctx.value.stroke()
+  
+  // 绘制标签
+  ctx.value.fillStyle = '#ff0000'
+  ctx.value.font = 'bold 12px Arial'
+  ctx.value.textAlign = 'left'
+  ctx.value.textBaseline = 'top'
+  ctx.value.fillText('(0, 0)', origin.canvasX + 12, origin.canvasY + 12)
+  
+  ctx.value.restore()
+}
+
 const handleCanvasMouseMove = (event: MouseEvent) => {
   if (!canvasRef.value) return
   
@@ -146,8 +178,7 @@ const draw = () => {
   drawPaths()
   drawPoints()
   drawVehicles()
-  
-
+  drawOrigin()
 }
 
 const render = () => {
