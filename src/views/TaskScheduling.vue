@@ -113,14 +113,16 @@
                 />
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="150" fixed="right">
+            <el-table-column label="操作" width="140" fixed="right">
               <template #default="{ row }">
-                <el-button type="primary" size="small" text @click="handleEditTask(row)">
-                  编辑
-                </el-button>
-                <el-button type="danger" size="small" text @click="handleDeleteTask(row)">
-                  删除
-                </el-button>
+                <el-space :size="6">
+                  <el-button type="primary" size="small" text @click="handleEditTask(row)">
+                    编辑
+                  </el-button>
+                  <el-button type="danger" size="small" text @click="handleDeleteTask(row)">
+                    删除
+                  </el-button>
+                </el-space>
               </template>
             </el-table-column>
           </el-table>

@@ -47,17 +47,19 @@
         <el-table-column prop="location" label="当前位置" />
         <el-table-column prop="currentTask" label="当前任务" />
         <el-table-column prop="speed" label="速度(m/s)" width="100" />
-        <el-table-column label="操作" width="200" fixed="right">
+        <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" size="small" text @click="handleControl(row)">
-              📱 控制
-            </el-button>
-            <el-button type="info" size="small" text @click="handleDetail(row)">
-              📊 详情
-            </el-button>
-            <el-button type="warning" size="small" text @click="handleMaintain(row)">
-              🔧 维护
-            </el-button>
+            <el-space :size="6">
+              <el-button type="primary" size="small" text @click="handleControl(row)">
+                控制
+              </el-button>
+              <el-button type="info" size="small" text @click="handleDetail(row)">
+                详情
+              </el-button>
+              <el-button type="warning" size="small" text @click="handleMaintain(row)">
+                维护
+              </el-button>
+            </el-space>
           </template>
         </el-table-column>
       </el-table>
