@@ -57,10 +57,18 @@ const menuItems = [
 
 html, body {
   overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
 }
 
 .app-container {
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #0a1828 0%, #1a2a4a 100%);

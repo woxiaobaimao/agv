@@ -268,8 +268,8 @@ onBeforeUnmount(() => {
 }
 
 .dashboard {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #0a1828 0%, #1a2a4a 100%);
@@ -282,10 +282,11 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 10px 20px;
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 2px solid #00ff88;
-  height: 60px;
+  height: 45px;
+  flex-shrink: 0;
 }
 
 .title {
@@ -303,17 +304,17 @@ onBeforeUnmount(() => {
 .main-content {
   display: flex;
   flex: 1;
-  gap: 15px;
-  padding: 15px;
+  gap: 10px;
+  padding: 10px;
   overflow: hidden;
 }
 
 .left-panel {
-  width: 200px;
+  width: 150px;
   background: rgba(10, 24, 40, 0.8);
   border: 1px solid #00ff88;
   border-radius: 8px;
-  padding: 15px;
+  padding: 12px;
   overflow: hidden;
 }
 
@@ -427,11 +428,11 @@ onBeforeUnmount(() => {
 }
 
 .right-panel {
-  width: 200px;
+  width: 150px;
   background: rgba(10, 24, 40, 0.8);
   border: 1px solid #00ddff;
   border-radius: 8px;
-  padding: 15px;
+  padding: 12px;
   overflow: hidden;
 }
 
@@ -504,11 +505,12 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 30px;
+  padding: 5px 20px;
   background: rgba(0, 0, 0, 0.3);
   border-top: 2px solid #00ddff;
-  height: 50px;
-  font-size: 12px;
+  height: 32px;
+  flex-shrink: 0;
+  font-size: 11px;
 }
 
 .bottom-info {
