@@ -106,14 +106,21 @@ const drawVehicles = () => {
   renderer.drawVehicles(vehicles.value, pointMap, worldToCanvas.value, getVehicleColor)
 }
 
-const getVehicleColor = (vehicle: Vehicle): string => {
-  const colors: { [key: string]: string } = {
-    'Vehicle-01-VDA5050-2.0': '#e74c3c',
-    'Vehicle-02': '#2ecc71',
-    'Vehicle-03': '#3498db',
-    'Vehicle-04': '#f39c12'
-  }
-  return colors[vehicle.name] || '#95a5a6'
+const mousePos = ref({ x: 0, y: 0 })
+
+const handleCanvasMouseMove = (event: MouseEvent) => {
+  if (!canvasRef.value) return
+  
+  const rect = canvasRef.value.getBoundingClientRect()
+  const canvasX = event.clientX - rect.left
+  const canvasY = event.clientY - rect.top
+  
+  // 计算相对于原点的像素坐标
+  const origin = worldToCanvas.value(0, 0)
+  const relX = Math.round(canvasX - origin.canvasX)
+  const relY = Math.round(origin.canvasY - canvasY)  // Y轴取反
+  
+  mousePos.value = { x: relX, y: relY }
 }
 
 const draw = () => {
@@ -121,60 +128,20 @@ const draw = () => {
   const renderer = new MapRenderer(ctx.value, canvasWidth.value, canvasHeight.value)
   renderer.clear('#f5f5f5')
   
-  // 绘制坐标原点（世界坐标 0,0）
-  const origin = worldToCanvas.value(0, 0)
-  ctx.value.fillStyle = '#ff0000'
-  ctx.value.beginPath()
-  ctx.value.arc(origin.canvasX, origin.canvasY, 8, 0, Math.PI * 2)
-  ctx.value.fill()
-  ctx.value.fillStyle = '#000'
-  ctx.value.font = 'bold 12px Arial'
-  ctx.value.textAlign = 'left'
-  ctx.value.fillText('Origin(0,0)', origin.canvasX + 12, origin.canvasY)
-  
-  
-  // 绘制Point-0001到Point-0002的控制点
-  if (plantModel.value) {
-    const path = plantModel.value.paths.find(p => 
-      p.srcPointName === 'Point-0001' && p.destPointName === 'Point-0002'
-    )
-    
-    if (path && (path as any).layout?.controlPoints) {
-      const controlPoints = (path as any).layout.controlPoints
-      console.log('Point-0001 -> Point-0002 controlPoints:', controlPoints)
-      
-      // 绘制第一个控制点
-      // controlPoints 已经是相对于原点的像素坐标，直接加到原点位置
-      const cp1X = origin.canvasX + controlPoints[0].x
-      const cp1Y = origin.canvasY - controlPoints[0].y  // Y轴取反
-      
-      ctx.value.fillStyle = '#00aa00'
-      ctx.value.beginPath()
-      ctx.value.arc(cp1X, cp1Y, 8, 0, Math.PI * 2)
-      ctx.value.fill()
-      ctx.value.fillStyle = '#000'
-      ctx.value.font = 'bold 12px Arial'
-      ctx.value.textAlign = 'left'
-      ctx.value.fillText(`CP1(${controlPoints[0].x},${-controlPoints[0].y})`, cp1X + 12, cp1Y)
-      
-      // 绘制第二个控制点
-      const cp2X = origin.canvasX + controlPoints[1].x
-      const cp2Y = origin.canvasY - controlPoints[1].y  // Y轴取反
-      
-      ctx.value.fillStyle = '#aa00aa'
-      ctx.value.beginPath()
-      ctx.value.arc(cp2X, cp2Y, 8, 0, Math.PI * 2)
-      ctx.value.fill()
-      ctx.value.fillStyle = '#000'
-      ctx.value.font = 'bold 12px Arial'
-      ctx.value.textAlign = 'left'
-      ctx.value.fillText(`CP2(${controlPoints[1].x},${-controlPoints[1].y})`, cp2X + 12, cp2Y)
-    }
-  }
-  
   drawPaths()
   drawPoints()
   drawVehicles()
+  
+  // 在右下角显示鼠标相对原点的像素坐标
+  ctx.value.fillStyle = '#000'
+  ctx.value.font = 'bold 14px Arial'
+  ctx.value.textAlign = 'right'
+  ctx.value.textBaseline = 'bottom'
+  ctx.value.fillText(
+    `Pixel: (${mousePos.value.x}, ${mousePos.value.y})`,
+    canvasWidth.value - 20,
+    canvasHeight.value - 20
+  )
 }
 
 const render = () => {
@@ -277,7 +244,7 @@ onBeforeUnmount(() => {
 
       <!-- 中间地图区域 -->
       <div class="map-container">
-        <canvas ref="canvasRef" class="map-canvas"></canvas>
+        <canvas ref="canvasRef" class="map-canvas" @mousemove="handleCanvasMouseMove"></canvas>
       </div>
 
       <!-- 右侧面板 -->
